@@ -19,8 +19,16 @@ class WatchList(APIView):
         serializers = WatchsSerializer(data=request.data)
         if serializers.is_valid():
             serializers.save()
-        return Response(serializers.data)       
+            return Response(serializers.data, status = status.HTTP_201_CREATED)  
+        return Response("An error occured, check if you have duplicated data or added a wrong data type", status = status.HTTP_400_BAD_REQUEST)         
 
+# class CreateOneWatch(APIView):
+#     def post(self,request):
+#         serializers = WatchsSerializer(data=request.data)
+#         if serializers.is_valid():
+#             serializers.save()
+#             return Response(serializers.data)  
+#         return Response("An error occured")
 
 class OneWatchType(APIView):
     def get( self, request, pk):
@@ -38,4 +46,10 @@ class OneWatchType(APIView):
     def delete(self, request, pk):
         delete_one_watch = Watch.objects.get(pk = pk)
         delete_one_watch.delete()
-        return Response("This stock has been deleted")    
+        return Response("This stock has been deleted", status=status.HTTP_204_NO_CONTENT) 
+
+def landing(request):
+    return render( request, "landing.html")   
+
+def watches(request):
+    return render( request, "watches.html")                

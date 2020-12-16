@@ -1,0 +1,195 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ {% if title %}
+  <title>Watch-APIs {{title}}</title>
+  {% else %}
+    <title>Watch-APis</title>
+ {% endif %}
+
+ {% block styles %}
+    
+    <!-- <link rel="icon" href="https://cdn5.vectorstock.com/i/thumbs/94/89/5-star-review-yellow-icon-five-stars-gold-vector-28489489.jpg"> -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <style type="text/css">
+          body{
+              background: lightcoral;
+          }
+          #watch-container{
+              max-width: 600px;
+              margin: 0 auto;
+              box-shadow: cadetblue;
+              background-color: aliceblue;
+              margin-top: 100px;
+              margin-bottom: 100px;
+              justify-content: space-around;
+              align-items: flex-start;
+          }
+          #form-wrapper{
+              position:  -webkit-sticky;
+              position: sticky;
+              top: 0rem;
+              border-bottom: 1px solid pink;
+              background-color: aliceblue;
+              box-shadow: cadetblue;
+              padding: 40px;
+          }
+          #submit{
+              background-color: lightcoral;
+              border-radius: 2px;
+              border: 0;
+              color: aliceblue;
+          }
+          .flex-wrapper{
+              display: flex;
+          }
+          .watches-wrapper{
+              margin: 5px;
+              padding: 5px;
+              border-bottom: 1px solid pink;
+              color: black;
+          }  
+          
+        </style>
+ {% endblock %}
+</head>
+<body>
+    <div class="container">
+        <div id="watch-container">
+            <div id="form-wrapper">
+                <form action="" id="form">
+                    <div class="flex-wrapper">
+                        <div style="flex: 6">
+                            <input type="text" id="title" class="form-control" name="title" placeholder="Add Watch stock">
+
+                        </div>
+                        <div style="flex: 1;">
+                            <input type="submit" name="" id="submit" class="btn">
+
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+            <div id="list-wrapper">
+                
+            </div>
+
+        </div>
+
+    </div>
+   
+
+ {% block content %} 
+
+
+ {%endblock%}
+
+ 
+ 
+
+ {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/e017c7c3e8.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+
+        availablewatches()
+        function availablewatches(){
+            var watches = document.getElementById("list-wrapper")
+            watches.innerHTML = ''
+            var url = "http://127.0.0.1:8000/api/watches/"
+
+            fetch(url)
+            .then((resp) => resp.json())
+            .then(function(data){
+                console.log('Data:', data)
+
+                var list = data
+                for (var i in list){
+                    var item = ` <div id="data-row-$(i)" class= "watches-wrapper flex-wrapper">
+                        <div style="flex:7">
+                            <span class="title">${list[i].name}</span>
+    
+                        </div>
+                        <div style="flex:1">
+                            <button class="btn btn-sm" id="edit">Edit</button>
+    
+                        </div>
+                        <div style="flex:1">
+                            <button class="btn btn-sm">Delete</button>
+    
+                        </div>
+    
+                    </div> `
+                    
+                    
+                    
+
+                    
+                   
+                 watches.innerHTML += item  
+                 
+                 for (var i in list){
+                    var editBtn = document.getElementById('edit')[i]
+                    
+                   
+
+                 }
+                 
+                }
+            })
+        }
+
+        var form = document.getElementById("form-wrapper")
+        form.addEventListener('submit', function(e){
+            e.preventDefault()
+            console.log("Form is subitted")
+            var url = "http://127.0.0.1:8000/api/watches/"
+            var name = document.getElementById('title').value
+            fetch(url, {
+                method:"POST",
+                headers:{
+                    'Content-type': 'application/json',
+                    'X-CSRFToken':csrftoken,
+                },
+                body:JSON.stringify({'name': name})
+            }).then(function(response){
+                availablewatches()
+            })
+        })
+        function editWatch(){
+            console.log("Item Edited")
+        }
+    </script>
+  {% endblock %}
+</body>
+</html> 

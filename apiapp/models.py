@@ -1,8 +1,8 @@
 from django.db import models
-
+from django.core.validators import validate_slug
 # Create your models here.
 class Watch(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True, validators=[validate_slug])
     prize = models.IntegerField()
     quantity = models.CharField(max_length=100)
 
