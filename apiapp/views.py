@@ -36,17 +36,21 @@ class OneWatchType(APIView):
         serializers = WatchsSerializer(get_one_watch)
         return Response(serializers.data)  
 
-    def put( self, request, pk):
-        update_one_watch = Watch.objects.get(pk =pk)
-        serializers = WatchsSerializer(update_one_watch, request.data)
-        if serializers.is_valid():
-            serializers.save()
-        return Response(serializers.data)    
+        
 
     def delete(self, request, pk):
         delete_one_watch = Watch.objects.get(pk = pk)
         delete_one_watch.delete()
         return Response("This stock has been deleted", status=status.HTTP_204_NO_CONTENT) 
+
+class UpdateWatch(APIView):
+    def post( self, request, pk):
+        update_one_watch = Watch.objects.get(pk =pk)
+        serializers = WatchsSerializer(instance=update_one_watch, data = request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        return Response("An error occurred") 
 
 def landing(request):
     return render( request, "landing.html")   
